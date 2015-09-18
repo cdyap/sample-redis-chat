@@ -1,0 +1,59 @@
+<!DOCTYPE HTML>
+<HTML lang="en">
+    <head>
+        <title>Sample Redis Chat Client</title>
+    </head>
+    <body>
+        <span>Messages</span>
+        <textarea readonly id="messages"></textarea>
+        <form id="form">
+        <table>
+            <tr>
+                <td><label for="username">Username</label></td>
+                <td><input type="text" id="username"/></td>
+            </tr>
+            <tr>
+                <td><label for="message">Message</label></td>
+                <td><textarea id="message"></textarea></td>
+            </tr>
+            <tr>
+                <td><input type="submit" value="Send" id="send"></td>
+            </tr>
+        </table>
+        </form>
+    </body>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="//code.jquery.com/jquery-1.11.3.min.js"></script>
+    <script src="//code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+    <script type="text/javascript">
+        var updatemessages = function(data) {
+            var oldcontents = $("#messages").val();
+            $("#messages").val(oldcontents + "\n" + data.username + ":" + data.message); 
+        }
+        $(document).ready(function() {
+           io = io.connect();
+           
+           io.emit('ready');
+           
+           // Handle sending message
+           $('#form').submit(function(evt) {
+              evt.preventDefault();
+              evt.stopPropagation();
+              var username = $("#username").val();
+              var message = $("#message").val();
+              
+              updatemessages({username: username, message: message});
+              
+              io.emit('msg-fromclient', {
+                  message: message,
+                  username: username
+              });
+              
+              // Handle receiving messages
+              io.on('msg-toclient', function(data) {
+                 updatemessages(data);
+              });
+           });
+        });
+    </script>
+</HTML>

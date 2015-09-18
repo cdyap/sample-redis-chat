@@ -1,0 +1,31 @@
+{
+  "name": "sample-redis-chat",
+  "version": "0.0.0",
+  "description": "Sample Redis chat written in JavaScript using node and express.io",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/holycattle/sample-redis-chat"
+  },
+  "keywords": [
+    "redis",
+    "nodejs",
+    "javascript",
+    "chat",
+    "pub",
+    "sub",
+    "socket"
+  ],
+  "author": "Joniel Ibasco <github.com/holycattle>",
+  "license": "GNU PL",
+  "bugs": {
+    "url": "https://github.com/holycattle/sample-redis-chat/issues"
+  },
+  "homepage": "https://github.com/holycattle/sample-redis-chat",
+  "dependencies": {
+    "express.io": "^1.1.13"
+  }
+}
