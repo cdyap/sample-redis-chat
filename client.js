@@ -73,6 +73,12 @@ $( document ).ready(function() {
     $(window).scrollTop($('#messages').height());
   }
 
+  function showJoiner(name) {
+    $('#joiners').show();
+    $('#joined').text(name)
+    $('#joiners').fadeOut(5000);
+  };
+
   window.onresize = function(){
     scrollToBottom();
   }
