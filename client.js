@@ -61,6 +61,7 @@ $( document ).ready(function() {
       var msg  = $('#m').val();
       
 			//TODO: actually send the message to the server!
+			socket.emit("io:message", msg);
       
 			$('#m').val(''); // clear message form ready for next/new message
       $('#m').attr('placeholder', ''); //clears placeholder once a msg is successfully sent
@@ -85,6 +86,10 @@ $( document ).ready(function() {
   }
 
 	//TODO: handle new chat messages from server
+	socket.on("chat:messages:latest", function(message) {
+		renderMessage(message);
+		scrollToBottom();
+	});
 
 	//TODO: handle new people joining the chat
 	socket.on("chat:people:new", function(name) {

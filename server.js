@@ -57,8 +57,24 @@ function initChat (listener, callback) {
 }
 
 function chatHandler (socket) {
-	socket.on('io:name', function (name) {
+	socket.on('io:name', function(name) {
+		pub.HSET("people", socket.client.conn.id, name);
 		pub.publish("chat:people:new", name);
+	});
+
+	socket.on('io:message', function(message) {
+		console.log(message);
+		pub.HGET("people", socket.client.conn.id, function(err, name) {
+			var str = JSON.stringify({
+				m: message,
+				t: new Date().getTime(),
+				n: name
+			});
+			console.log(socket.client.conn.id);
+			console.log(name);
+			pub.RPUSH("chat:messages", str);
+			pub.publish("chat:messages:latest", str);
+		});
 	});
 }
 
