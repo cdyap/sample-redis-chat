@@ -23,6 +23,7 @@ server.register(require('inert'), function () {
 	  { method: 'GET', path: '/style.css', handler: { file: './style.css' } },
 	  
 		//TODO: setup endpoint(s), i.e. an endpoint to load messages
+		{ method: 'GET', path: '/messages', handler: loadMessages}
 	]);
 
 	server.start(function () {

@@ -97,6 +97,12 @@ $( document ).ready(function() {
 	});
 
 	//TODO: load messages
+	$.get("/messages", function(data) {
+		data.map(function(msg) {
+			renderMessage(msg);
+		});
+		scrollToBottom();
+	});
 	
 	getName(); //register chat name
 });
