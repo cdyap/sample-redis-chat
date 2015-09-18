@@ -1,29 +1,49 @@
-/* simple-redis-chat
-A Simple Redis Chat Client written in JavaScript using nodejs and express.io
-@authors: Joniel Ibasco <github.com/holycattle>, Kix Panganiban <github.com/kixpanganiban>
-*/
+//taken from https://github.com/dwyl/hapi-socketio-redis-chat-example
 
-var app = require('express.io')();
-app.http().io();
+var Hapi = require('hapi');
+var server = new Hapi.Server();
 
-// Socket routes
-app.io.route('ready', function(req) {
-    console.log('Client connected!');
+var pub = require('redis-connection')();
+var sub = require('redis-connection')('subscriber');
+
+var SocketIO = require('socket.io');
+var io;
+
+//setup server
+server.connection({
+	host: '0.0.0.0',
+	port: Number(process.env.PORT)
 });
-app.io.route('msg-fromclient', function(req) {
-    // Just bounce the message back to all clients
-    req.io.broadcast('msg-toclient', req.data);
-    console.log(req.data.username + ":" + req.data.message)
-    });
+server.register(require('inert'), function () {
 
-// Normal http routes
-app.get('/', function(req, res) {
-    res.sendfile('index.html');
+	server.route([
+	  //static files
+		{ method: 'GET', path: '/', handler: { file: "index.html" } },
+	  { method: 'GET', path: '/client.js', handler: { file: './client.js' } },
+	  { method: 'GET', path: '/style.css', handler: { file: './style.css' } },
+	  
+		//TODO: setup endpoint(s), i.e. an endpoint to load messages
+	]);
+
+	server.start(function () {
+		initChat(server.listener, function(){
+			console.log('Feeling Chatty?', 'listening on: http://127.0.0.1:'+process.env.PORT);
+		});
+	});	
 });
 
-var server = app.listen(3000, function() {
-    var host = server.address().address;
-    var port = server.address().port;
-    
-    console.log("Server started at http://%s:%s", host, port);
-});
+//TODO: initialize chat
+	// once redis is ready, init socket connection
+	// setup socket listeners, i.e. the chat handler
+		// handle users logging in
+		// handle messages being sent
+	// setup pubsub listener that sends data over the socket
+
+//TODO: handle endpoint that load messages
+function loadMessages (req, reply) {
+  pub.lrange("chat:messages", 0, -1, function (err, data) {
+    reply(data);
+  });
+}
+
+module.exports = server;
