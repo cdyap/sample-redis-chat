@@ -42,5 +42,9 @@
     "pre-commit": "1.1.1",
     "tap-spec": "^4.1.0",
     "tape": "^4.2.0"
+  },
+
+  "scripts": {
+    "start": "PORT=8000 ./node_modules/.bin/nodemon ./server.js"
   }
 }
