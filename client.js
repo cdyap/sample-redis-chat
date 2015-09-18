@@ -12,6 +12,7 @@ $( document ).ready(function() {
     }
     
 		//TODO: notify server that a new user connected!
+		socket.emit("io:name", name);
     
 		$( "#m" ).focus(); // focus cursor on the message input
     return name;
@@ -73,13 +74,22 @@ $( document ).ready(function() {
     $(window).scrollTop($('#messages').height());
   }
 
+  function showJoiner(name) {
+    $('#joiners').show();
+    $('#joined').text(name)
+    $('#joiners').fadeOut(5000);
+  };
+
   window.onresize = function(){
     scrollToBottom();
   }
 
 	//TODO: handle new chat messages from server
 
-	//TODO: handle new people joining the chat 
+	//TODO: handle new people joining the chat
+	socket.on("chat:people:new", function(name) {
+		showJoiner(name);
+	});
 
 	//TODO: load messages
 	
