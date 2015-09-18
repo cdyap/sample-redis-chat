@@ -33,11 +33,34 @@ server.register(require('inert'), function () {
 });
 
 //TODO: initialize chat
-	// once redis is ready, init socket connection
+	// once redis pub/sub is ready, init socket connection and subscribe to relevant channels
 	// setup socket listeners, i.e. the chat handler
 		// handle users logging in
 		// handle messages being sent
 	// setup pubsub listener that sends data over the socket
+
+function initChat (listener, callback) {
+	pub.on("ready", function() {
+		sub.on("ready", function() {
+			sub.subscribe("chat:messages:latest", "chat:people:new");
+
+			io = SocketIO.listen(listener);
+			io.on("connection", chatHandler);
+
+			sub.on("message", function(channel, message) {
+				io.emit(channel, message);
+			});
+
+			callback();
+		});
+	});
+}
+
+function chatHandler (socket) {
+	socket.on('io:name', function (name) {
+		pub.publish("chat:people:new", name);
+	});
+}
 
 //TODO: handle endpoint that load messages
 function loadMessages (req, reply) {
