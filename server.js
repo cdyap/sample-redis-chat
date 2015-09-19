@@ -39,6 +39,10 @@ server.register(require('inert'), function () {
 		// handle messages being sent
 	// setup pubsub listener that sends data over the socket
 
+function initChat(listener, callback) {
+	callback();
+}
+
 //TODO: handle endpoint that load messages
 function loadMessages (req, reply) {
   pub.lrange("chat:messages", 0, -1, function (err, data) {
