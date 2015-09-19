@@ -4,7 +4,8 @@
   "description": "Sample Redis chat written in JavaScript using node and express.io",
   "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "PORT=8000 ./node_modules/.bin/nodemon ./server.js"
   },
   "repository": {
     "type": "git",
